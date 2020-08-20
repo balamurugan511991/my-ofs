@@ -29,11 +29,12 @@ public class OrderDBService {
 		try {
 			PackageOrder orderBean = om.readValue(order, PackageOrder.class);
 			orderRepository.save(orderBean);
+			logger.info("successfully saved");
+			return "successfully saved";
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
+			return "Error while saving";
 		}
-		logger.info("successfully saved");
-		return "successfully saved";
 	}
 	
 	

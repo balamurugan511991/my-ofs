@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.order.fulfillment.dto.FailedOrder;
 import com.order.fulfillment.dto.PackageOrder;
+import com.order.fulfillment.repository.FailedOrderRepository;
 import com.order.fulfillment.repository.OrderRepository;
 
 @Service
@@ -17,6 +19,9 @@ public class OrderDBService {
 	
 	@Autowired
 	private OrderRepository orderRepository;
+	
+	@Autowired
+	FailedOrderRepository failedOrderRepository;
 	
 	public String save(String order) {
 		logger.info("saving order to db");
@@ -31,5 +36,17 @@ public class OrderDBService {
 		return "successfully saved";
 	}
 	
+	
+	public void saveFailure(String order) {
+		logger.info("saving failed order to db");
+		ObjectMapper om = new ObjectMapper();
+		try {
+			FailedOrder orderBean = om.readValue(order, FailedOrder.class);
+			failedOrderRepository.save(orderBean);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		logger.info("successfully saved failed order");
+	}
 	
 }
